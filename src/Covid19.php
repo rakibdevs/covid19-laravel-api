@@ -73,34 +73,16 @@ class Covid19
 
     public function __construct()
     {
-        $this->api_key          = Config::get('covid.api_key');
+        $this->api_key  = Config::get('covid.api_key');
         $this->client = new Client([
             'base_uri' => $this->url,
             'timeout'  => 10.0,
-        ]);
-        $this->client->setDefaultOption('headers', 
-            array(
+            'headers'  => array(
                 'x-rapidapi-key'  => $this->api_key,
                 'x-rapidapi-host' => 'covid-193.p.rapidapi.com'
             )
-        );
+        ]);
 
-    }
-
-    /**
-     * build query parameters.
-     *
-     * @param array $params
-     * @return string
-     */
-
-    private function buildParams(array $params)
-    {
-        $params['appid'] = $this->api_key;
-        $params['units'] = $this->uom;
-        $params['lang']  = $this->lang;
-
-        return http_build_query($params);
     }
 
 
@@ -113,10 +95,10 @@ class Covid19
      */
 
 
-    private function getStatisticsData(array $query)
+    private function getStatisticsData(array $query = [])
     {
         try{
-            $response = $this->client->request('GET', $this->statistics.$this->buildParams($query));
+            $response = $this->client->request('GET', $this->statistics.http_build_query($query));
             if($response->getStatusCode() == 200){
                 $res = json_decode($response->getBody()->getContents());
                 return $res;
@@ -136,10 +118,10 @@ class Covid19
      */
 
 
-    private function getCountriesData(array $query)
+    private function getCountriesData(array $query = [])
     {
         try{
-            $response = $this->client->request('GET', $this->countries.$this->buildParams($query));
+            $response = $this->client->request('GET', $this->countries.http_build_query($query));
             if($response->getStatusCode() == 200){
                 $res = json_decode($response->getBody()->getContents());
                 return $res;
@@ -160,10 +142,10 @@ class Covid19
      */
 
 
-    private function getHistoryData(array $query)
+    private function getHistoryData(array $query = [])
     {
         try{
-            $response = $this->client->request('GET', $this->history.$this->buildParams($query));
+            $response = $this->client->request('GET', $this->history.http_build_query($query));
             if($response->getStatusCode() == 200){
                 $res = json_decode($response->getBody()->getContents());
                 return $res;
@@ -175,9 +157,64 @@ class Covid19
     }
 
 
-    public function getCountries(string $city = null)
+    public function getCountries(string $country = null)
     {
-        return $this->getCountriesData(['search' => $city]);
+        return $this->getCountriesData(['search' => $country]);
+    }
+
+    public function getAllCountries()
+    {
+        return $this->getCountriesData();
+    }
+
+
+    public function getStatistics(string $country = null)
+    {
+        return $this->getStatisticsData(['country' => $country]);
+    }
+
+    public function getAllStatistics(string $country = null)
+    {
+        return $this->getStatisticsData();
+    }
+
+    public function getHistory(string $country, string $date = null)
+    {
+        $params['country'] =  $country;
+        if($date)
+            $params['country'] = $date;
+
+        return $this->getHistoryData($params);
+    }
+
+    public function getSummary()
+    {
+        $data = $this->getStatisticsData();
+      
+        $sum['cases_new'] = 0;
+        $sum['cases_active'] = 0;
+        $sum['cases_critical'] = 0;
+        $sum['cases_recovered'] = 0;
+        $sum['cases_total'] = 0;
+        $sum['deaths_new'] = 0;
+        $sum['deaths_total'] = 0;
+        $sum['tests_total'] = 0;
+        $sum['time'] = '';
+        
+        foreach ($data->response as $k => $val) {
+            $sum['cases_new'] += $val->cases->new;
+            $sum['cases_active'] += $val->cases->active;
+            $sum['cases_critical'] += $val->cases->critical;
+            $sum['cases_recovered'] += $val->cases->recovered;
+            $sum['cases_total'] += $val->cases->total;
+            $sum['deaths_new'] += $val->deaths->new;
+            $sum['deaths_total'] += $val->deaths->total;
+            $sum['tests_total'] += $val->tests->total;
+
+            $sum['time'] = $val->time;
+        }
+        return (object) $sum;
+
     }
 
 }

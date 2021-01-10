@@ -15,7 +15,7 @@ class Covid19ServiceProvider extends ServiceProvider
     {
         $this->app->make('RakibDevs\Covid19\Covid19');
         $this->publishes([
-            __DIR__ . '/config/openweather.php' => config_path('openweather.php'),
+            __DIR__ . '/config/covid.php' => config_path('covid.php'),
         ]);
     }
 
