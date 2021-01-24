@@ -182,7 +182,7 @@ class Covid19
     {
         $params['country'] =  $country;
         if($date)
-            $params['country'] = $date;
+            $params['day'] = $date;
 
         return $this->getHistoryData($params);
     }
