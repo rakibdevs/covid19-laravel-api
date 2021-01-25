@@ -16,7 +16,7 @@
     },
     "autoload": {
         "psr-4": {
-            "RakibDevs\\Covid19\\": "src"
+            "RakibDevs\\Covid19\\": "src/"
         }
     },
     "extra": {
