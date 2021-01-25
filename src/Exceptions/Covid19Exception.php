@@ -1,11 +1,11 @@
 <?php
-namespace RakibDevs\Covid19\Src\Exceptions;
+namespace RakibDevs\Covid19\Exceptions;
 
 use Exception;
 
-class Covid19Exception extends \Exception
+class Covid19Exception extends Exception
 {
-	private $e;
+    private $e;
 
     public function __construct($e){
         $this->e = $e;
