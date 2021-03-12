@@ -181,9 +181,9 @@ class Covid19
     public function getHistory(string $country, string $date = null)
     {
         $params['country'] =  $country;
-        if($date)
+        if($date){
             $params['day'] = $date;
-
+        }
         return $this->getHistoryData($params);
     }
 
