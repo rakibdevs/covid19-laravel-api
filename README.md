@@ -67,10 +67,16 @@ Here you can see some example of just how simple this package is to use.
 
 ```php
 use RakibDevs\Covid19\Covid19;
+use RakibDevs\Covid19\Facades\Covid;
 
-$wt = new Covid19();
+// Get current Covid19 by city name 
 
-$info = $wt->getCountries('ban');    // Get current Covid19 by city name
+// 1. The traditional way
+$wt   = new Covid19();
+$info = $wt->getCountries('ban');    
+
+// 2. The Facade way
+$info = Covid::getCountries('ban');
 
 
 ```
