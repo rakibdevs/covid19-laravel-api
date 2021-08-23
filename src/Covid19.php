@@ -12,7 +12,7 @@ namespace RakibDevs\Covid19;
  * @since    2021-01-10
  */
 
-use RakibDevs\Covid19\Src\Exceptions\Covid19Exception;
+use RakibDevs\Covid19\Exceptions\Covid19Exception;
 use Illuminate\Support\Facades\Config;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
