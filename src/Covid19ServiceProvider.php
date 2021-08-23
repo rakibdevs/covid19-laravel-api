@@ -17,6 +17,10 @@ class Covid19ServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/config/covid.php' => config_path('covid.php'),
         ]);
+
+        $this->app->bind('covid', function ($app) {
+            return new Covid19();
+        });
     }
 
     /**
